@@ -18,18 +18,37 @@ const blockShapes = [
     [[1, 1, 1], [1, 0, 0]],  // J block
 ];
 
-let currentBlock = {
-    shape: getRandomBlockShape(),
-    x: Math.floor(cols / 2) - 1, // Starting position of the block
-    y: 0
-};
+let currentBlock = makeRandomBlock()
+
 
 let landedBlocks = Array.from({ length: rows }, () => Array(cols).fill(false));
 let gameOver = false;
 let nextBlockShape;
 
-function getRandomBlockShape() {
-    return blockShapes[Math.floor(Math.random() * blockShapes.length)];
+function makeRandomBlock() {
+    const blockShapes = [
+        [[1, 1], [1, 1]],  // Square block
+        [[1, 1, 1, 1]],    // Line block
+        [[1, 1, 0], [0, 1, 1]],  // S block
+        [[0, 1, 1], [1, 1, 0]],  // Z block
+        [[0, 1, 0], [1, 1, 1]],  // T block
+        [[1, 1, 1], [0, 0, 1]],  // L block
+        [[1, 1, 1], [1, 0, 0]],  // J block
+    ];
+
+    const colors = ['blue', 'red', 'green', 'purple', 'orange', 'cyan']; // Define a list of colors
+    const randomColor = colors[Math.floor(Math.random() * colors.length)]; // Choose a random color
+
+    const randomShape = blockShapes[Math.floor(Math.random() * blockShapes.length)];
+    const randomX = Math.floor(cols / 2) - 1; // Random x coordinate
+    const randomY = 0; // Initial y coordinate
+
+    return {
+        color: randomColor,
+        shape: randomShape,
+        x: randomX,
+        y: randomY
+    };
 }
 
 function rotateBlock(shape, direction) {
@@ -142,19 +161,12 @@ function checkFullRows() {
 
 function spawnNewBlock() {
     if (!nextBlockShape) {
-        nextBlockShape = getRandomBlockShape();
+        nextBlockShape = makeRandomBlock();
     }
     const currentShape = nextBlockShape;
-    const colors = ['blue', 'red', 'green', 'purple', 'orange', 'cyan']; // Define a list of colors
-    const randomColor = colors[Math.floor(Math.random() * colors.length)]; // Choose a random color
-    nextBlockShape = getRandomBlockShape();
+    nextBlockShape = makeRandomBlock();
     drawNextBlock(nextBlockShape); // Draw the next block
-    currentBlock = {
-        color: randomColor,
-        shape: currentShape,
-        x: Math.floor(cols / 2) - 1, // Starting position of the block
-        y: 0
-    };
+    currentBlock = currentShape
 }
 
 function drawLandedBlocks() {
@@ -196,29 +208,31 @@ function draw() {
     drawBlock(currentBlock);
 }
 
-function drawNextBlock(nextBlockShape) {
+function drawNextBlock(nextBlock) {
     const nextBlockCtx = nextBlockCanvas.getContext('2d');
     const blockSize = nextBlockCanvas.width / 4; // Adjust the blockSize to fit 4 cells horizontally
 
     nextBlockCtx.clearRect(0, 0, nextBlockCanvas.width, nextBlockCanvas.height);
 
-    nextBlockCtx.fillStyle = 'blue';
+    nextBlockCtx.fillStyle = nextBlock.color; // Use the color of the next block
     nextBlockCtx.strokeStyle = 'black';
     nextBlockCtx.lineWidth = 1;
 
     // Calculate the starting position for drawing the next block
-    const startX = (nextBlockCanvas.width - nextBlockShape[0].length * blockSize) / 2;
-    const startY = (nextBlockCanvas.height - nextBlockShape.length * blockSize) / 2;
+    const startX = (nextBlockCanvas.width - nextBlock.shape[0].length * blockSize) / 2;
+    const startY = (nextBlockCanvas.height - nextBlock.shape.length * blockSize) / 2;
 
-    for (let y = 0; y < nextBlockShape.length; y++) {
-        for (let x = 0; x < nextBlockShape[y].length; x++) {
-            if (nextBlockShape[y][x]) {
+    for (let y = 0; y < nextBlock.shape.length; y++) {
+        for (let x = 0; x < nextBlock.shape[y].length; x++) {
+            if (nextBlock.shape[y][x]) {
                 nextBlockCtx.fillRect(startX + x * blockSize, startY + y * blockSize, blockSize, blockSize);
                 nextBlockCtx.strokeRect(startX + x * blockSize, startY + y * blockSize, blockSize, blockSize);
             }
         }
     }
 }
+
+
 
 function drawGameOver() {
     ctx.fillStyle = 'red';
