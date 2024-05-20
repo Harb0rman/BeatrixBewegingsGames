@@ -49,7 +49,7 @@ function rotateBlock(shape, direction) {
 }
 
 function drawBlock(block) {
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = block.color; // Set the fill color
     ctx.strokeStyle = 'black'; // Set stroke color
     ctx.lineWidth = 1; // Set line width
     for (let y = 0; y < block.shape.length; y++) {
@@ -116,7 +116,10 @@ function addBlockToLandedBlocks(block) {
     for (let y = 0; y < block.shape.length; y++) {
         for (let x = 0; x < block.shape[y].length; x++) {
             if (block.shape[y][x]) {
-                landedBlocks[block.y + y][block.x + x] = true;
+                landedBlocks[block.y + y][block.x + x] = {
+                    color: block.color, // Save the color of the block
+                    shape: block.shape
+                };
             }
         }
     }
@@ -142,9 +145,12 @@ function spawnNewBlock() {
         nextBlockShape = getRandomBlockShape();
     }
     const currentShape = nextBlockShape;
+    const colors = ['blue', 'red', 'green', 'purple', 'orange', 'cyan']; // Define a list of colors
+    const randomColor = colors[Math.floor(Math.random() * colors.length)]; // Choose a random color
     nextBlockShape = getRandomBlockShape();
     drawNextBlock(nextBlockShape); // Draw the next block
     currentBlock = {
+        color: randomColor,
         shape: currentShape,
         x: Math.floor(cols / 2) - 1, // Starting position of the block
         y: 0
@@ -152,12 +158,13 @@ function spawnNewBlock() {
 }
 
 function drawLandedBlocks() {
-    ctx.fillStyle = 'blue';
     ctx.strokeStyle = 'black'; // Set stroke color
     ctx.lineWidth = 1; // Set line width
     for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
-            if (landedBlocks[y][x]) {
+            const block = landedBlocks[y][x];
+            if (block) {
+                ctx.fillStyle = block.color; // Set color of the block
                 ctx.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
                 ctx.strokeRect(x * blockSize, y * blockSize, blockSize, blockSize); // Draw stroke
             }
