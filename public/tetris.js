@@ -26,6 +26,7 @@ let currentBlock = {
 
 let landedBlocks = Array.from({ length: rows }, () => Array(cols).fill(false));
 let gameOver = false;
+let nextBlockShape;
 
 function getRandomBlockShape() {
     return blockShapes[Math.floor(Math.random() * blockShapes.length)];
@@ -137,10 +138,14 @@ function checkFullRows() {
 }
 
 function spawnNewBlock() {
-    const nextBlockShape = getRandomBlockShape(); // Get shape of the next block
+    if (!nextBlockShape) {
+        nextBlockShape = getRandomBlockShape();
+    }
+    const currentShape = nextBlockShape;
+    nextBlockShape = getRandomBlockShape();
     drawNextBlock(nextBlockShape); // Draw the next block
     currentBlock = {
-        shape: nextBlockShape,
+        shape: currentShape,
         x: Math.floor(cols / 2) - 1, // Starting position of the block
         y: 0
     };
