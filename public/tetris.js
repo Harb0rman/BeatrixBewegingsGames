@@ -146,7 +146,6 @@ function spawnNewBlock() {
     };
 }
 
-
 function drawLandedBlocks() {
     ctx.fillStyle = 'blue';
     ctx.strokeStyle = 'black'; // Set stroke color

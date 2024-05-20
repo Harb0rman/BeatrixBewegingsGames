@@ -68,12 +68,22 @@ footer {
     bottom: 0;
 }
 
+/* Your existing CSS styles */
+
 /* Tetris Canvas */
 canvas#tetrisCanvas {
     display: block;
     margin: 0 auto;
     border: 2px solid #000;
 }
+
+/* Next Block Canvas */
+canvas#nextBlockCanvas {
+    display: block;
+    margin: 20px auto; /* Adjust margin as needed */
+    border: 1px solid #000;
+}
+
 
 /* Styles for the modal */
 .modal {
