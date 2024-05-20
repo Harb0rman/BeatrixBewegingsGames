@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris</title>
+    <link rel="stylesheet" href="tetris.css">
+</head>
+<body>
+    <header>
+        <h1>Tetris</h1>
+    </header>
+    <main>
+        <a href="index.html" class="back-button">Terug naar Hoofdpagina</a>
+        <div id="gameContainer">
+            <canvas id="tetrisCanvas" width="240" height="480"></canvas>
+            <canvas id="nextBlockCanvas" width="80" height="80"></canvas> <!-- New canvas for next block -->
+        </div>
+        <div id="score">Score: 0</div>
+        <div id="restartModal" class="modal">
+            <div class="modal-content">
+                <p>Game Over! Do you want to restart?</p>
+                <button id="restartButton">Restart</button>
+            </div>
+        </div>
+    </main>
+    <script src="tetris.js"></script>
+</body>
+</html>
