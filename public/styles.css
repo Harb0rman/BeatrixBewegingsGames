@@ -64,3 +64,17 @@ footer {
     width: 100%;
     bottom: 0;
 }
+
+/* RTL ondersteuning voor Arabisch */
+body[lang="ar"] {
+    direction: rtl;
+    text-align: right;
+}
+
+body[lang="ar"] header, 
+body[lang="ar"] nav, 
+body[lang="ar"] main, 
+body[lang="ar"] footer {
+    text-align: right;
+}
+
