@@ -3,33 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kinderwebsite</title>
+    <title data-translate-key="title">BeatrixBewegingsGames</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Nieuwe CSS-stijlen toegevoegd */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        h1 {
+            margin: 0;
+            flex-grow: 1; /* Laat de h1 groeien om ruimte in te nemen */
+            text-align: center; /* Centreer de tekst in de h1 */
+        }
+
+        select {
+            margin-left: auto;
+        }
+        
+        .umcg-logo img {
+            width: 80px; /* Pas de breedte aan naar wens */
+            height: auto; /* Behoud de aspect ratio */
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Welkom op BeatrixBewegingsGames!</h1>
+        <div class="umcg-logo">
+            <a href="https://www.umcg.nl" target="_blank"><img src="umcg.jpg" alt="UMCG Logo"></a>
+        </div>
+        <h1 data-translate-key="welcomeHeader">Welkom op BeatrixBewegingsGames!</h1>
+        <select id="languageSelect" onchange="changeLanguage()">
+            <option value="nl">Nederlands</option>
+            <option value="en">English</option>
+            <option value="ar">العربية</option>
+        </select>
     </header>
     <nav>
         <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#games">Games</a></li>
+            <li><a href="#home" data-translate-key="home">Home</a></li>
+            <li><a href="#games" data-translate-key="games">Games</a></li>
         </ul>
     </nav>
     <main>
         <section id="home">
-            <h2>Welkom!</h2>
-            <p>Hier kun je allerlei leuke spelletjes spelen en plezier hebben!</p>
+            <h2 data-translate-key="welcome">Welkom!</h2>
+            <p data-translate-key="welcomeText">Hier kun je allerlei leuke spelletjes spelen en plezier hebben!</p>
         </section>
         <section id="games">
-            <h2>Games</h2>
-            <div class="game-placeholder"><a href="snake.html">Snake</a></div>
-            <div class="game-placeholder"><a href="tetris.html">Tetris</a></div>
-            <div class="game-placeholder">Game 3</div>
+            <h2 data-translate-key="gamesHeader">Games</h2>
+            <div class="game-placeholder"><a href="snake.html" data-translate-key="snake">Snake</a></div>
+            <div class="game-placeholder"><a href="tetris.html" data-translate-key="tetris">Tetris</a></div>
+            <div class="game-placeholder" data-translate-key="game3">Game 3</div>
         </section>
     </main>
     <footer>
-        <p>&copy; 2024 BeatrixBewegingsGames. Alle rechten voorbehouden.</p>
+        <p data-translate-key="footer">&copy; 2024 BeatrixBewegingsGames. Alle rechten voorbehouden.</p>
     </footer>
+
+    <script>
+      let translations = {};
+
+      async function loadTranslations(lang) {
+        try {
+          const response = await fetch(`${lang}.json`);
+          if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+          }
+          translations = await response.json();
+          updateContent();
+        } catch (error) {
+          console.error('Error loading translations:', error);
+        }
+      }
+
+      function updateContent() {
+        document.querySelectorAll("[data-translate-key]").forEach(element => {
+          const key = element.getAttribute("data-translate-key");
+          if (translations[key]) {
+            element.textContent = translations[key];
+          }
+        });
+        document.title = translations['title'];
+      }
+
+      function changeLanguage() {
+        const selectedLang = document.getElementById('languageSelect').value;
+        localStorage.setItem('preferredLanguage', selectedLang);
+        document.documentElement.lang = selectedLang; // Update the <html> lang attribute
+        document.body.lang = selectedLang; // Update the <body> lang attribute
+        loadTranslations(selectedLang);
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('preferredLanguage') || 'nl';
+        document.getElementById('languageSelect').value = savedLang;
+        document.documentElement.lang = savedLang; // Set the initial <html> lang attribute
+        document.body.lang = savedLang; // Set the initial <body> lang attribute
+        loadTranslations(savedLang);
+      });
+    </script>
 </body>
 </html>
