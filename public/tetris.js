@@ -166,7 +166,7 @@ function spawnNewBlock() {
     const currentShape = nextBlockShape;
     nextBlockShape = makeRandomBlock();
     drawNextBlock(nextBlockShape); // Draw the next block
-    currentBlock = currentShape
+       currentBlock = currentShape
 }
 
 function drawLandedBlocks() {
@@ -231,8 +231,6 @@ function drawNextBlock(nextBlock) {
         }
     }
 }
-
-
 
 function drawGameOver() {
     ctx.fillStyle = 'red';
@@ -319,3 +317,4 @@ setInterval(dropBlock, 500); // Drop the block every 0.5 seconds
 
 draw(); // Initial drawing
 updateScore(); // Initialize score display
+
