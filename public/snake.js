@@ -81,6 +81,8 @@ function draw() {
     ctx.fillStyle = '#f0f0f0';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    drawGrid();
+
     for (let i = 0; i < snake.length; i++) {
         if (i === 0) {
             drawRotatedImage(snakeHeadImg, snake[i].x, snake[i].y, getHeadRotation(direction));
@@ -132,6 +134,25 @@ function draw() {
     }
 
     snake.unshift(newHead);
+}
+
+function drawGrid() {
+    ctx.strokeStyle = '#cccccc';
+    ctx.lineWidth = 0.5;
+
+    for (let x = 0; x <= canvas.width; x += box) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+    }
+
+    for (let y = 0; y <= canvas.height; y += box) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+    }
 }
 
 function getHeadRotation(direction) {
@@ -193,8 +214,9 @@ function getBodyRotation(prev, curr, next) {
         snake[0] = { x: 9 * box, y: 10 * box };
         direction = null;
         food = generateFood();
-        game = setInterval(draw, 100);
+        clearInterval(game);
+        game = setInterval(draw, snakeSpeed);
     }
     
-    let game = setInterval(draw, 100);
-    
+    const snakeSpeed = 200; // Define snake speed here
+    let game = setInterval(draw, snakeSpeed);
