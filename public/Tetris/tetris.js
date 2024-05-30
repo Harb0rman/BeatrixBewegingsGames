@@ -18,7 +18,7 @@ const blockShapes = [
     [[1, 1, 1], [1, 0, 0]],  // J block
 ];
 
-let currentBlock = makeRandomBlock()
+let currentBlock = makeRandomBlock();
 
 
 let landedBlocks = Array.from({ length: rows }, () => Array(cols).fill(false));
@@ -166,7 +166,7 @@ function spawnNewBlock() {
     const currentShape = nextBlockShape;
     nextBlockShape = makeRandomBlock();
     drawNextBlock(nextBlockShape); // Draw the next block
-       currentBlock = currentShape
+    currentBlock = currentShape;
 }
 
 function drawLandedBlocks() {
@@ -272,6 +272,16 @@ function restartGame() {
     restartModal.style.display = 'none';
 }
 
+function moveBlockToShadowPosition() {
+    let shadowY = currentBlock.y;
+    while (!checkCollision(currentBlock.x, shadowY + 1, currentBlock.shape)) {
+        shadowY++;
+    }
+    currentBlock.y = shadowY; // Move the current block to the shadow position
+    draw();
+    dropBlock(); // Handle the block dropping and spawning a new block
+}
+
 // Event listener for arrow keys and rotation keys
 document.addEventListener('keydown', function(event) {
     if (!gameOver) {
@@ -308,6 +318,9 @@ document.addEventListener('keydown', function(event) {
                     draw();
                 }
                 break;
+            case 38: // Up arrow
+                moveBlockToShadowPosition();
+                break;
         }
     }
 });
@@ -317,4 +330,3 @@ setInterval(dropBlock, 500); // Drop the block every 0.5 seconds
 
 draw(); // Initial drawing
 updateScore(); // Initialize score display
-
