@@ -1,0 +1,69 @@
+.game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px); /* Adjust the height as needed, 80px accounts for header and footer */
+    background-color: #e0e0e0;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(7, 50px);
+    grid-gap: 2px;
+    padding: 20px;
+    border: 2px dashed rgb(0, 49, 131);
+    background-color: #e0e0e0;
+    position: relative;
+}
+
+.cell {
+    width: 50px;
+    height: 50px;
+    border: 2px solid rgb(0, 49, 131); /* Blue border to create space */
+    border-radius: 50%; /* Makes the cells circular */
+    background-color: #f0f0f0; /* Ensures the background of the cells match the game board */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.player1 {
+    background-color: red;
+    border: 2px solid rgb(0, 49, 131); /* Keep the border */
+}
+
+.player2 {
+    background-color: yellow;
+    border: 2px solid rgb(0, 49, 131); /* Keep the border */
+}
+
+.shadow {
+    background-color: rgba(0, 0, 0, 0.1); /* Light gray shadow */
+    border: 2px solid rgb(0, 49, 131); /* Blue border to match the cells */
+}
+
+/* Player info and scorecards */
+.player-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 20px;
+}
+
+.player-info p {
+    margin: 5px 0;
+    font-size: 1.2em;
+    padding: 5px;
+    border: 2px solid black;
+    text-align: center;
+    width: 100px;
+}
+
+#player1-info {
+    color: red;
+}
+
+#player2-info {
+    color: yellow;
+}
