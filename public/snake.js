@@ -3,10 +3,12 @@ const ctx = canvas.getContext('2d');
 
 const box = 20;
 let snake = [];
-snake[0] = { x: 9 * box, y: 10 * box };
+snake[0] = { x: 9 * box, y: 10 * box }; // Hoofd
+snake[1] = { x: 8 * box, y: 10 * box }; // Staart
 
-let direction;
+let direction = 'RIGHT';
 let food = generateFood();
+let game; // Verplaats het game interval naar de buitenkant
 
 // Laad de afbeeldingen
 const snakeHeadImg = new Image();
@@ -18,22 +20,22 @@ snakeBodyImg.src = 'snakebody.png'; // Pad naar je slang lichaam afbeelding
 const snakeBodyTurnImg = new Image();
 snakeBodyTurnImg.src = 'snakebodyturn.png'; // Pad naar je slang lichaam met draai afbeelding
 
-const snakeTailUpImg = new Image();
-snakeTailUpImg.src = 'snaketail_up.png'; // Afbeelding voor de staart omhoog
-
-const snakeTailDownImg = new Image();
-snakeTailDownImg.src = 'snaketail_down.png'; // Afbeelding voor de staart omlaag
-
-const snakeTailRightImg = new Image();
-snakeTailRightImg.src = 'snaketail_right.png'; // Afbeelding voor de staart naar rechts
-
-const snakeTailLeftImg = new Image();
-snakeTailLeftImg.src = 'snaketail_left.png'; // Afbeelding voor de staart naar links
+const snakeTailImg = new Image();
+snakeTailImg.src = 'snaketail.png'; // Enige afbeelding voor de staart
 
 const foodImg = new Image();
 foodImg.src = 'apple.png'; // Pad naar je voedsel afbeelding
 
-document.addEventListener('keydown', setDirection);
+document.addEventListener('keydown', startGame);
+
+function startGame(event) {
+    if (!game) {
+        game = setInterval(draw, snakeSpeed);
+        document.removeEventListener('keydown', startGame);
+        document.addEventListener('keydown', setDirection); // Voeg de setDirection event listener toe
+        setDirection(event); // Roep setDirection aan om de initiële richting te zetten
+    }
+}
 
 function setDirection(event) {
     if (event.keyCode === 37 && direction !== 'RIGHT') {
@@ -69,7 +71,7 @@ function generateFood() {
 }
 
 function collision(newHead, array) {
-    for (let i = 0; i < array.length; i++) {
+    for (let i = 1; i < array.length; i++) { // Begin met index 1 om botsing met de staart te vermijden
         if (newHead.x === array[i].x && newHead.y === array[i].y) {
             return true;
         }
@@ -87,7 +89,7 @@ function draw() {
         if (i === 0) {
             drawRotatedImage(snakeHeadImg, snake[i].x, snake[i].y, getHeadRotation(direction));
         } else if (i === snake.length - 1) {
-            drawRotatedImage(getTailImage(snake[i - 1], snake[i]), snake[i].x, snake[i].y, getTailRotation(snake[i - 1], snake[i]));
+            drawRotatedImage(snakeTailImg, snake[i].x, snake[i].y, getTailRotation(snake[i - 1], snake[i]));
         } else {
             let prev = snake[i - 1];
             let curr = snake[i];
@@ -106,6 +108,8 @@ function draw() {
 
     ctx.drawImage(foodImg, food.x, food.y, box, box);
 
+    if (!game) return; // Voeg dit toe om te voorkomen dat de slang beweegt voordat het spel begint
+
     let snakeX = snake[0].x;
     let snakeY = snake[0].y;
 
@@ -118,7 +122,8 @@ function draw() {
 
     if (snakeX === food.x && snakeY === food.y) {
         // Voeg een nieuw lichaamsdeel toe
-        snake.push({ x: snake[snake.length - 1].x, y: snake[snake.length - 1].y });
+        let newPart = { x: snake[snake.length - 1].x, y: snake[snake.length - 1].y };
+        snake.push(newPart);
         food = generateFood();
     } else {
         snake.pop();
@@ -170,53 +175,47 @@ function getHeadRotation(direction) {
 
 function getTailRotation(prev, curr) {
     if (prev.x === curr.x) {
-        return prev.y > curr.y ? 0 : Math.PI;
+        return prev.y > curr.y ? -Math.PI / 2 : Math.PI / 2;
     } else {
-        return prev.x > curr.x ? Math.PI / 2 : -Math.PI / 2;
-    }
-}
-
-function getTailImage(prev, curr) {
-    if (prev.x === curr.x) {
-        return prev.y > curr.y ? snakeTailUpImg : snakeTailDownImg;
-    } else {
-        return prev.x > curr.x ? snakeTailLeftImg : snakeTailRightImg;
+        return prev.x > curr.x ? Math.PI : 0;
     }
 }
 
 function getBodyRotation(prev, curr, next) {
     if (prev.x === curr.x && curr.x === next.x) {
-        return 0; // Horizontal
+        return 0; // Vertical
     } else if (prev.y === curr.y && curr.y === next.y) {
-        return Math.PI / 2; // Vertical
+        return Math.PI / 2; // Horizontal
     } else if ((prev.x < curr.x && curr.y < next.y && prev.y === curr.y) || (prev.y < curr.y && curr.x > next.x && prev.x === curr.x)) {
         return -Math.PI / 2; // Right turn
-    } else if ((prev.x > curr.x && curr.y < next.y && prev.y === curr.y) || (prev.y
-        < curr.y && curr.x < next.x && prev.x === curr.x)) {
-            return Math.PI; // Down turn
-        } else if ((prev.x > curr.x && curr.y > next.y && prev.y === curr.y) || (prev.y > curr.y && curr.x < next.x && prev.x === curr.x)) {
-            return Math.PI / 2; // Left turn
-        } else if ((prev.x < curr.x && curr.y > next.y && prev.y === curr.y) || (prev.y > curr.y && curr.x > next.x && prev.x === curr.x)) {
-            return -Math.PI / 2; // Up turn
-        }
+    } else if ((prev.x > curr.x && curr.y < next.y && prev.y === curr.y) || (prev.y < curr.y && curr.x < next.x && prev.x === curr.x)) {
+        return Math.PI; // Down turn
+    } else if ((prev.x > curr.x && curr.y > next.y && prev.y === curr.y) || (prev.y > curr.y && curr.x < next.x && prev.x === curr.x)) {
+        return Math.PI / 2; // Left turn
+    } else if ((prev.x < curr.x && curr.y > next.y && prev.y === curr.y) || (prev.y > curr.y && curr.x > next.x && prev.x === curr.cx)) {
+        return 0; // Up turn
     }
-    
-    function drawRotatedImage(img, x, y, rotation) {
-        ctx.save();
-        ctx.translate(x + box / 2, y + box / 2);
-        ctx.rotate(rotation);
-        ctx.drawImage(img, -box / 2, -box / 2, box, box);
-        ctx.restore();
-    }
-    
-    function resetGame() {
-        snake = [];
-        snake[0] = { x: 9 * box, y: 10 * box };
-        direction = null;
-        food = generateFood();
-        clearInterval(game);
-        game = setInterval(draw, snakeSpeed);
-    }
-    
-    const snakeSpeed = 200; // Define snake speed here
-    let game = setInterval(draw, snakeSpeed);
+}
+
+function drawRotatedImage(img, x, y, rotation) {
+    ctx.save();
+    ctx.translate(x + box / 2, y + box / 2);
+    ctx.rotate(rotation);
+    ctx.drawImage(img, -box / 2, -box / 2, box, box);
+    ctx.restore();
+}
+
+function resetGame() {
+    snake = [];
+    snake[0] = { x: 9 * box, y: 10 * box }; // Hoofd
+    snake[1] = { x: 8 * box, y: 10 * box }; // Staart
+    direction = 'RIGHT';
+    food = generateFood();
+    clearInterval(game);
+    game = null; // Zet game terug naar null
+    draw(); // Teken de begintoestand
+    document.addEventListener('keydown', startGame); // Voeg de event listener opnieuw toe
+}
+
+const snakeSpeed = 200; // Define snake speed here
+draw(); // Teken de begintoestand wanneer de pagina geladen is
