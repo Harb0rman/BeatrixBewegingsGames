@@ -23,8 +23,52 @@
         }
         
         .umcg-logo img {
-            width: 80px; /* Past de breedte aan */
+            width: 80px; /* Past breedte aan */
             height: auto; 
+        }
+        
+        .game-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 90%;
+            height: 200px;
+            margin-bottom: 20px;
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+            text-decoration: none;
+        }
+
+        .game-card h3 {
+            margin: 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            width: 100%;
+            text-align: center;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .empty-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ccc;
+            height: 200px;
+        }
+
+        @media (max-width: 600px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -53,9 +97,20 @@
         </section>
         <section id="games">
             <h2 data-translate-key="gamesHeader">Games</h2>
-            <div class="game-placeholder"><a href="snake.html" data-translate-key="snake">Snake</a></div>
-            <div class="game-placeholder"><a href="tetris.html" data-translate-key="tetris">Tetris</a></div>
-            <div class="game-placeholder"><a href="4opeenrij.html" data-translate-key="4opeenrij">4opeenrij</a></div>
+            <div class="games-grid">
+                <a href="snake.html" class="game-card" style="background-image: url('snake.png');">
+                    <h3 data-translate-key="snake">Snake</h3>
+                </a>
+                <a href="tetris.html" class="game-card" style="background-image: url('tetris.png');">
+                    <h3 data-translate-key="tetris">Tetris</h3>
+                </a>
+                <a href="4opeenrij.html" class="game-card" style="background-image: url('4opeenrij.png');">
+                    <h3 data-translate-key="4opeenrij">4 op een rij</h3>
+                </a>
+                <div class="empty-card">
+                    <p>Meer games binnenkort...</p>
+                </div>
+            </div>
         </section>
     </main>
     <footer>

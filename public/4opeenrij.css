@@ -41,7 +41,10 @@
 .shadow {
     background-color: rgba(0, 0, 0, 0.1); /* Light gray shadow */
     border: 2px solid rgb(0, 49, 131); /* Blue border to match the cells */
+    z-index: 10; /* Ensure the shadow appears above the cells */
+    position: absolute; /* Position absolute for correct placement */
 }
+
 
 /* Player info and scorecards */
 .player-info {

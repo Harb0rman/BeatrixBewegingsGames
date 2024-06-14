@@ -66,3 +66,31 @@ body[lang="ar"] main,
 body[lang="ar"] footer {
     text-align: right;
 }
+
+/* Card Styles */
+.game-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    background-color: #fff;
+}
+
+.game-card:hover {
+    transform: scale(1.05);
+}
+
+.game-card a {
+    text-decoration: none;
+    color: #0074cc;
+    font-size: 1.2em;
+}
+
+.game-cards {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
