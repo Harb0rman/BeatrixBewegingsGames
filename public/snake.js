@@ -20,6 +20,9 @@ snakeBodyImg.src = 'snakebody.png'; // Pad naar je slang lichaam afbeelding
 const snakeBodyTurnImg = new Image();
 snakeBodyTurnImg.src = 'snakebodyturn.png'; // Pad naar je slang lichaam met draai afbeelding
 
+const snakeBodyCornerImg = new Image();
+snakeBodyCornerImg.src = 'snakebody_corner.png'; // Pad naar je slang lichaam met hoek afbeelding
+
 const snakeTailImg = new Image();
 snakeTailImg.src = 'snaketail.png'; // Enige afbeelding voor de staart
 
@@ -99,7 +102,7 @@ function draw() {
             if ((prev.x === curr.x && curr.x === next.x) || (prev.y === curr.y && curr.y === next.y)) {
                 img = snakeBodyImg;
             } else {
-                img = snakeBodyTurnImg; // Snake body with turn image
+                img = snakeBodyCornerImg; // Snake body with corner image
             }
 
             drawRotatedImage(img, curr.x, curr.y, getBodyRotation(prev, curr, next));
