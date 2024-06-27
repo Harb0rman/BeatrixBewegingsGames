@@ -98,11 +98,7 @@ canvas {
 }
 
 .close {
-    position: absolute;
-    top: 0;
-    right: 10px;
-    font-size: 24px;
-    cursor: pointer;
+    display: none;
 }
 
 .close:hover,

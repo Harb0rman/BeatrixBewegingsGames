@@ -235,22 +235,25 @@ function resetGame() {
 function gameOverModal() {
     const modal = document.getElementById('myModal');
     const retryButton = document.getElementById('modal-retry-btn');
+    const modalScore = document.getElementById('modal-score-value'); // Nieuw element voor modale score
+    modalScore.textContent = score; // Update de modale score met de huidige score
 
     modal.style.display = 'block';
 
-    retryButton.onclick = function() {
+    retryButton.onclick = function () {
         modal.style.display = 'none';
         resetGame();
-    }
+    };
 
     // Handle clicking outside modal
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         if (event.target == modal) {
             modal.style.display = 'none';
             resetGame();
         }
-    }
+    };
 }
+
 
 
 const snakeSpeed = 200; // Define snake speed here
