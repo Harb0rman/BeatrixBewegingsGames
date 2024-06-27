@@ -10,6 +10,8 @@ let direction = 'RIGHT';
 let food = generateFood();
 let game; // Verplaats het game interval naar de buitenkant
 
+let score = 0; // Variabele voor de score
+
 // Laad de afbeeldingen
 const snakeHeadImg = new Image();
 snakeHeadImg.src = 'snakehead.png'; // Pad naar je slang hoofd afbeelding
@@ -35,8 +37,8 @@ function startGame(event) {
     if (!game) {
         game = setInterval(draw, snakeSpeed);
         document.removeEventListener('keydown', startGame);
-        document.addEventListener('keydown', setDirection); // Voeg de setDirection event listener toe
-        setDirection(event); // Roep setDirection aan om de initiële richting te zetten
+        document.addEventListener('keydown', setDirection);
+        setDirection(event);
     }
 }
 
@@ -74,7 +76,7 @@ function generateFood() {
 }
 
 function collision(newHead, array) {
-    for (let i = 1; i < array.length; i++) { // Begin met index 1 om botsing met de staart te vermijden
+    for (let i = 1; i < array.length; i++) {
         if (newHead.x === array[i].x && newHead.y === array[i].y) {
             return true;
         }
@@ -83,6 +85,8 @@ function collision(newHead, array) {
 }
 
 function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Wis het canvas
+
     ctx.fillStyle = '#f0f0f0';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -111,7 +115,7 @@ function draw() {
 
     ctx.drawImage(foodImg, food.x, food.y, box, box);
 
-    if (!game) return; // Voeg dit toe om te voorkomen dat de slang beweegt voordat het spel begint
+    if (!game) return;
 
     let snakeX = snake[0].x;
     let snakeY = snake[0].y;
@@ -124,25 +128,26 @@ function draw() {
     let newHead = { x: snakeX, y: snakeY };
 
     if (snakeX === food.x && snakeY === food.y) {
-        // Voeg een nieuw lichaamsdeel toe
         let newPart = { x: snake[snake.length - 1].x, y: snake[snake.length - 1].y };
         snake.push(newPart);
         food = generateFood();
+
+        // Update the score
+        score++;
+        document.getElementById('score-value').textContent = score;
     } else {
         snake.pop();
     }
 
     if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
         clearInterval(game);
-        setTimeout(() => {
-            if (confirm("Game over! Wil je opnieuw proberen?")) {
-                resetGame();
-            }
-        }, 100);
+        setTimeout(gameOverModal, 100);
     }
 
     snake.unshift(newHead);
 }
+
+
 
 function drawGrid() {
     ctx.strokeStyle = '#cccccc';
@@ -210,15 +215,43 @@ function drawRotatedImage(img, x, y, rotation) {
 
 function resetGame() {
     snake = [];
-    snake[0] = { x: 9 * box, y: 10 * box }; // Hoofd
-    snake[1] = { x: 8 * box, y: 10 * box }; // Staart
+    snake[0] = { x: 9 * box, y: 10 * box };
+    snake[1] = { x: 8 * box, y: 10 * box };
     direction = 'RIGHT';
     food = generateFood();
+    score = 0;
+    document.getElementById('score-value').textContent = score;
     clearInterval(game);
-    game = null; // Zet game terug naar null
+    game = null;
+    
+    // Wis het canvas voordat je begint te tekenen
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
     draw(); // Teken de begintoestand
     document.addEventListener('keydown', startGame); // Voeg de event listener opnieuw toe
 }
+
+
+function gameOverModal() {
+    const modal = document.getElementById('myModal');
+    const retryButton = document.getElementById('modal-retry-btn');
+
+    modal.style.display = 'block';
+
+    retryButton.onclick = function() {
+        modal.style.display = 'none';
+        resetGame();
+    }
+
+    // Handle clicking outside modal
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+            resetGame();
+        }
+    }
+}
+
 
 const snakeSpeed = 200; // Define snake speed here
 draw(); // Teken de begintoestand wanneer de pagina geladen is
