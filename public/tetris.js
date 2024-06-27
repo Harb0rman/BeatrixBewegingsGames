@@ -325,6 +325,19 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+// Function to update score in the modal
+function updateModalScore() {
+    const modalScoreValue = document.getElementById('modal-score-value');
+    modalScoreValue.textContent = score;
+}
+
+// Function to show the restart modal
+function openRestartModal() {
+    const restartModal = document.getElementById('restartModal');
+    restartModal.style.display = 'block';
+    updateModalScore(); // Update score in modal
+}
+
 // Game loop
 setInterval(dropBlock, 500); // Drop the block every 0.5 seconds
 

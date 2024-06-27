@@ -11,14 +11,25 @@
         <h1>Tetris</h1>
     </header>
     <main>
+        <div class="instruction">
+            <h2>Instructies</h2>
+            <p><span>&#8592;</span> 1 blokje naar links</p>
+            <p><span>&#8594;</span> 1 blokje naar rechts</p>
+            <p><span>&#8595;</span> 1 blokje omlaag</p>
+            <p><span>&#8593;</span> gelijk naar het grijze blokje vallen</p>
+            <p><span><b>X</b></span> om naar links te draaien</p>
+            <p><span><b>O</b></span> om naar rechts te draaien</p>
+        </div>
+
         <a href="index.html" class="back-button">Terug naar Hoofdpagina</a>
         <canvas id="tetrisCanvas" width="240" height="480"></canvas>
-        <canvas id="nextBlockCanvas" width="80" height="80"></canvas> <!-- Next block canvas -->
+        <canvas id="nextBlockCanvas" width="80" height="80"></canvas>
         <div id="score">Score: 0</div>
         <div id="restartModal" class="modal">
             <div class="modal-content">
-                <p>Game Over! Do you want to restart?</p>
-                <button id="restartButton">Restart</button>
+                <p id="modal-score-text">Game Over!</p>
+                <p id="modal-score">Je hebt een score van <span id="modal-score-value">0</span> punten behaald</p>
+                <button id="restartButton">Opnieuw starten</button>
             </div>
         </div>
     </main>
