@@ -81,6 +81,9 @@ class ConnectFour {
             this.updateScorecards();
             this.showModal(`Speler ${this.winner} wint!`);
             this.resetBoard(); // Reset the board after a player wins
+        } else if (this.isBoardFull()) {
+            this.showModal('Gelijkspel!');
+            this.resetBoard(); // Reset the board after a draw
         } else {
             this.player = this.player === 1 ? 2 : 1;
             this.updatePlayerInfo();
@@ -144,6 +147,15 @@ class ConnectFour {
         }
 
         return false;
+    }
+
+    isBoardFull() {
+        for (let col = 0; col < this.cols; col++) {
+            if (this.board[0][col] === null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     updateScorecards() {
