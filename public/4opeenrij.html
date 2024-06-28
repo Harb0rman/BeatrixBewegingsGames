@@ -10,22 +10,36 @@
 <body>
     <header>
         <h1>4 op een rij</h1>
+        <button id="reset-scores" class="reset-scores">Reset Scores</button>
     </header>
+    <div class="instruction">
+        <h2>Instructies</h2>
+        <p><span>&#8592;</span> 1 plaats naar links te gaan</p>
+        <p><span>&#8594;</span> 1 plaats naar rechts te gaan</p>
+        <p><span>&#8595;</span> om het balletje te plaatsen op de grijze plek</p>
+        <p>De speler in het witte blokje is aan de beurt</p>
+    </div>
     <a href="index.html" class="back-button">Terug naar Hoofdpagina</a>
     <div class="game-container">
-        <div id="player1-info" class="player-info">
+        <div id="player1-info" class="player-info inactive">
             <p>Speler 1</p>
             <p id="player1-score">Score: 0</p>
         </div>
         <div id="4opeenrij" class="game-board"></div>
-        <div id="player2-info" class="player-info">
+        <div id="player2-info" class="player-info inactive">
             <p>Speler 2</p>
             <p id="player2-score">Score: 0</p>
         </div>
     </div>
-    <footer>
-        <p>2024 BeatrixBewegingsGames. Alle rechten voorbehouden.</p>
-    </footer>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p id="modal-score-text">Game over!</p>
+            <button id="modal-retry-btn">Verder spelen</button>
+        </div>
+    </div>
+
     <script src="4opeenrij.js"></script>
 </body>
 </html>
