@@ -19,11 +19,17 @@ snakeHeadImg.src = 'snakehead.png'; // Pad naar je slang hoofd afbeelding
 const snakeBodyImg = new Image();
 snakeBodyImg.src = 'snakebody.png'; // Pad naar je slang lichaam afbeelding
 
-const snakeBodyTurnImg = new Image();
-snakeBodyTurnImg.src = 'snakebodyturn.png'; // Pad naar je slang lichaam met draai afbeelding
+const snakeBodyCorner1Img = new Image();
+snakeBodyCorner1Img.src = 'snakebody_corner1.png'; // Pad naar je slang lichaam met hoek 1 afbeelding
 
-const snakeBodyCornerImg = new Image();
-snakeBodyCornerImg.src = 'snakebody_corner.png'; // Pad naar je slang lichaam met hoek afbeelding
+const snakeBodyCorner2Img = new Image();
+snakeBodyCorner2Img.src = 'snakebody_corner2.png'; // Pad naar je slang lichaam met hoek 2 afbeelding
+
+const snakeBodyCorner3Img = new Image();
+snakeBodyCorner3Img.src = 'snakebody_corner3.png'; // Pad naar je slang lichaam met hoek 3 afbeelding
+
+const snakeBodyCorner4Img = new Image();
+snakeBodyCorner4Img.src = 'snakebody_corner4.png'; // Pad naar je slang lichaam met hoek 4 afbeelding
 
 const snakeTailImg = new Image();
 snakeTailImg.src = 'snaketail.png'; // Enige afbeelding voor de staart
@@ -87,7 +93,8 @@ function collision(newHead, array) {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Wis het canvas
 
-    ctx.fillStyle = '#f0f0f0';
+    // Teken de lichtgroene achtergrond
+    ctx.fillStyle = '#8bc34a';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     drawGrid();
@@ -106,7 +113,7 @@ function draw() {
             if ((prev.x === curr.x && curr.x === next.x) || (prev.y === curr.y && curr.y === next.y)) {
                 img = snakeBodyImg;
             } else {
-                img = snakeBodyCornerImg; // Snake body with corner image
+                img = getBodyImage(prev, curr, next);
             }
 
             drawRotatedImage(img, curr.x, curr.y, getBodyRotation(prev, curr, next));
@@ -147,7 +154,48 @@ function draw() {
     snake.unshift(newHead);
 }
 
+function getBodyImage(prev, curr, next) {
+    if (prev.x === curr.x && curr.x === next.x) {
+        // Verticale beweging
+        if (prev.y < curr.y && curr.x < next.x) {
+            return snakeBodyCorner2Img; // Van boven naar rechts
+        } else if (prev.y < curr.y && curr.x > next.x) {
+            return snakeBodyCorner4Img; // Van boven naar links
+        } else if (prev.y > curr.y && curr.x < next.x) {
+            return snakeBodyCorner1Img; // Van onder naar rechts
+        } else if (prev.y > curr.y && curr.x > next.x) {
+            return snakeBodyCorner3Img; // Van onder naar links
+        }
+    } else if (prev.y === curr.y && curr.y === next.y) {
+        // Horizontale beweging
+        if (prev.x < curr.x && curr.y > next.y) {
+            return snakeBodyCorner3Img; // Van rechts naar boven
+        } else if (prev.x < curr.x && curr.y < next.y) {
+            return snakeBodyCorner1Img; // Van rechts naar onder
+        } else if (prev.x > curr.x && curr.y > next.y) {
+            return snakeBodyCorner4Img; // Van links naar boven
+        } else if (prev.x > curr.x && curr.y < next.y) {
+            return snakeBodyCorner2Img; // Van links naar onder
+        }
+    } else {
+        // Hoekafbeeldingen voor diagonale bewegingen
+        if ((prev.x < curr.x && curr.y < next.y && (next.x < curr.x || prev.y > curr.y)) || 
+            (prev.y < curr.y && curr.x < next.x && (next.y < curr.y || prev.x > curr.x))) {
+            return snakeBodyCorner1Img; // Van links-boven naar rechts-onder
+        } else if ((prev.y < curr.y && curr.x > next.x && (next.y < curr.y || prev.x < curr.x)) ||
+                   (prev.x < curr.x && curr.y < next.y && (next.x > curr.x || prev.y < curr.y))) {
+            return snakeBodyCorner2Img; // Van rechts-boven naar links-onder
+        } else if ((prev.x > curr.x && curr.y > next.y && (next.x > curr.x || prev.y < curr.y)) ||
+                   (prev.y > curr.y && curr.x < next.x && (next.y > curr.y || prev.x > curr.x))) {
+            return snakeBodyCorner3Img; // Van links-onder naar rechts-boven
+        } else if ((prev.y > curr.y && curr.x > next.x && (next.y > curr.y || prev.x < curr.x)) ||
+                   (prev.x > curr.x && curr.y > next.y && (next.x < curr.x || prev.y > curr.y))) {
+            return snakeBodyCorner4Img; // Van rechts-onder naar links-boven
+        }
+    }
 
+    return snakeBodyImg; // Standaard lichaamssegment
+}
 
 function drawGrid() {
     ctx.strokeStyle = '#cccccc';
@@ -191,18 +239,22 @@ function getTailRotation(prev, curr) {
 
 function getBodyRotation(prev, curr, next) {
     if (prev.x === curr.x && curr.x === next.x) {
-        return 0; // Vertical
+        return 0; // Verticale lijn
     } else if (prev.y === curr.y && curr.y === next.y) {
-        return Math.PI / 2; // Horizontal
-    } else if ((prev.x < curr.x && curr.y < next.y && prev.y === curr.y) || (prev.y < curr.y && curr.x > next.x && prev.x === curr.x)) {
-        return -Math.PI / 2; // Right turn
-    } else if ((prev.x > curr.x && curr.y < next.y && prev.y === curr.y) || (prev.y < curr.y && curr.x < next.x && prev.x === curr.x)) {
-        return Math.PI; // Down turn
-    } else if ((prev.x > curr.x && curr.y > next.y && prev.y === curr.y) || (prev.y > curr.y && curr.x < next.x && prev.x === curr.x)) {
-        return Math.PI / 2; // Left turn
-    } else if ((prev.x < curr.x && curr.y > next.y && prev.y === curr.y) || (prev.y > curr.y && curr.x > next.x && prev.x === curr.cx)) {
-        return 0; // Up turn
+        return Math.PI / 2; // Horizontale lijn
     }
+
+    if (prev.x < curr.x && curr.y < next.y) { // Van links naar boven
+        return -Math.PI / 2; // Draai naar rechts
+    } else if (prev.y < curr.y && curr.x < next.x) { // Van boven naar rechts
+        return 0; // Geen draai
+    } else if (prev.x > curr.x && curr.y < next.y) { // Van rechts naar boven
+        return Math.PI; // Draai naar links
+    } else if (prev.y < curr.y && curr.x > next.x) { // Van boven naar links
+        return Math.PI / 2; // Draai naar links
+    }
+
+    return 0; // Standaard geen draai
 }
 
 function drawRotatedImage(img, x, y, rotation) {
@@ -231,7 +283,6 @@ function resetGame() {
     document.addEventListener('keydown', startGame); // Voeg de event listener opnieuw toe
 }
 
-
 function gameOverModal() {
     const modal = document.getElementById('myModal');
     const retryButton = document.getElementById('modal-retry-btn');
@@ -253,8 +304,6 @@ function gameOverModal() {
         }
     };
 }
-
-
 
 const snakeSpeed = 200; // Define snake speed here
 draw(); // Teken de begintoestand wanneer de pagina geladen is
