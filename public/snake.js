@@ -305,5 +305,5 @@ function gameOverModal() {
     };
 }
 
-const snakeSpeed = 200; // Define snake speed here
+const snakeSpeed = 250; // Define snake speed here
 draw(); // Teken de begintoestand wanneer de pagina geladen is
